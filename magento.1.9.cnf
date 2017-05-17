@@ -111,11 +111,11 @@ location ~* \.(swf|eot|ttf|otf|woff|woff2)$ {
 # error pages
 error_page  404              /404.html;
 location = /404.html {
-    root   /usr/share/nginx/html;
+    root   $MAGE_ROOT/errors/default;
 }
 error_page   500 502 503 504  /50x.html;
 location = /50x.html {
-    root   /usr/share/nginx/html;
+    root   $MAGE_ROOT/errors/default;
 }
 
 ## Forward paths like /js/index.php/x.js to relevant handler
