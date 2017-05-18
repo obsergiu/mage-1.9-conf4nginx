@@ -10,23 +10,6 @@ autoindex off;
 charset UTF-8;
 
 
-
-location / {
-    try_files $uri $uri/ /index.php$is_args$args;
-}
-
-location / {
-    ## If missing pass the URI to Magento's front handler
-    try_files /maintenance.html $uri $uri/ @handler;
-    expires 30d; ## Assume all files are cachable
-}
-
-## Magento uses a common front handler
-location @handler {
-    rewrite / /index.php;
-}
-
-
 ## These locations would be hidden by .htaccess normally
 ## restrict var, dev and .git directory from external access
 ## restrict cron.php from external access
@@ -62,6 +45,21 @@ location ~ ^/(wishlist|customer|catalogsearch|newsletter|tag/product/list|sales/
 if ($args ~ ^(brand|cat|color|dir|from|limit|price|type|mode|size|manufacturer)=.+) { set $filters A; }
 if ($http_user_agent ~* "Baiduspider|Googlebot|bingbot|Yahoo|Yandex") { set $filters "${filters}B"; }
 if ($filters = AB) { return 410; }
+
+
+###########################
+## Main entry point
+###########################
+location / {
+    ## If missing pass the URI to Magento's front handler
+    try_files /maintenance.html $uri $uri/ @handler;
+    expires 30d; ## Assume all files are cachable
+}
+
+## Magento uses a common front handler
+location @handler {
+    rewrite / /index.php;
+}
 
 
 ## deny htaccess files
